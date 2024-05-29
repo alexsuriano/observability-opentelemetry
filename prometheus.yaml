@@ -1,0 +1,16 @@
+scrape_configs:
+  - job_name: 'open-telemetry-collector'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['open-telemetry-collector:8889']
+      - targets: ['open-telemetry-collector:8888']
+
+  - job_name: 'go-metrics'
+    scrape_interval: 5s
+    static_configs: 
+      - targets: ['app_a:8080']
+      
+  - job_name: 'another-lang-metrics'
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'app_b:8081' ]

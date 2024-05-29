@@ -1,0 +1,29 @@
+services:
+
+  # service_a:
+  #   build:
+  #     context: ./serviceA
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     - OTEL_EXPORTER_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+  #   depends_on:
+  #     - zipkin
+  #     - service_b
+
+  service_b:
+    build:
+      context: ./service_b
+      dockerfile: Dockerfile
+    ports:
+      - 8282:8282
+    environment:
+      - OTEL_EXPORTER_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - zipkin
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
