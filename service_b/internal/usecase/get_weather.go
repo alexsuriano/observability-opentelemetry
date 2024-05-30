@@ -1,10 +1,13 @@
 package usecase
 
 import (
+	"context"
 	"net/http"
+	"os"
 	"strconv"
 
 	externalapi "github.com/alexsuriano/observability-opentelemetry/service_b/internal/external-api"
+	"go.opentelemetry.io/otel"
 )
 
 type GetWeatherHandler struct {
@@ -37,7 +40,7 @@ func NewGetWeatherHandler(
 	}
 }
 
-func (g *GetWeatherHandler) Execute() (*Temperature, *ErrorResponse) {
+func (g *GetWeatherHandler) Execute(ctx context.Context) (*Temperature, *ErrorResponse) {
 	if !g.ValidateCep() {
 		return nil, &ErrorResponse{
 			HttpCode: http.StatusUnprocessableEntity,
@@ -45,7 +48,9 @@ func (g *GetWeatherHandler) Execute() (*Temperature, *ErrorResponse) {
 		}
 	}
 
+	ctx, spanViaCep := otel.Tracer(os.Getenv("OTEL_SERVICE_NAME")).Start(ctx, "Via-CEP")
 	location, err := g.ViaCep.GetLocation(g.Cep)
+	spanViaCep.End()
 	if err != nil {
 		if err.Error() == "can not find zipcode" {
 			return nil, &ErrorResponse{
@@ -59,8 +64,9 @@ func (g *GetWeatherHandler) Execute() (*Temperature, *ErrorResponse) {
 			}
 		}
 	}
-
+	ctx, spanWeatherApi := otel.Tracer(os.Getenv("OTEL_SERVICE_NAME")).Start(ctx, "Weather-API")
 	weather, err := g.WeatherApi.GetTemperature(location.Localidade)
+	spanWeatherApi.End()
 	if err != nil {
 		return nil, &ErrorResponse{
 			HttpCode: http.StatusBadRequest,

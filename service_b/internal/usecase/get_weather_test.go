@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"testing"
 
 	externalapi "github.com/alexsuriano/observability-opentelemetry/service_b/internal/external-api"
@@ -14,7 +15,7 @@ func TestGetWeatherExecute(t *testing.T) {
 
 	getWeather := NewGetWeatherHandler(cep, *weatherApi, *viaCepApi)
 
-	temp, err := getWeather.Execute()
+	temp, err := getWeather.Execute(context.Background())
 
 	assert.Nil(t, err)
 	assert.NotNil(t, temp)

@@ -1,0 +1,7 @@
+curl --request POST \
+  --url http://localhost:8181/temperature \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/8.4.5' \
+  --data '{
+	"cep":"17030025"
+}'
