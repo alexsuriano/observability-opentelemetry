@@ -32,3 +32,17 @@ Após a implementação dos serviços, adicione a implementação do OTEL + Zipk
 
 Implementar tracing distribuído entre Serviço A - Serviço B
 Utilizar span para medir o tempo de resposta do serviço de busca de CEP e busca de temperatura
+
+### Como rodar a aplicação:
+- Clone o projeto
+- Vá até raiz do projeto
+- Execute o seguinte comando para subir os 2 serviços e o zipkin:
+```
+docker compose up
+```
+- Você pode executar um `POST` para `http://localhost:8181` usando o seguinte schema json como body da requisiçãp:
+
+  `{ "cep": "29902555" }`
+  
+- Para facilitar a chamada, a pasta `api` contém um arquivo `temperatureCity.http` que faz uma chamada de exemplo, sinta-se a vontade para trocar o CEP ao qual desejar.
+- Você pode acessar o painel do Zipkin no seguinte endereço: `http://localhost:9411`
