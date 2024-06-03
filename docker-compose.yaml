@@ -9,6 +9,7 @@ services:
     environment:
       - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
       - OTEL_SERVICE_NAME=service_a
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
     depends_on:
       - zipkin
       - service_b
@@ -22,6 +23,7 @@ services:
     environment:
       - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
       - OTEL_SERVICE_NAME=service_b
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
     depends_on:
       - zipkin
 
@@ -29,3 +31,14 @@ services:
     image: openzipkin/zipkin
     ports:
       - 9411:9411
+  
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    restart: always
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      # - "8888:8888"
+      # - "8889:8889"
+      - "4317:4317"
