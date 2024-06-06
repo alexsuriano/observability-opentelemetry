@@ -68,7 +68,7 @@ func main() {
 	initProvider()
 
 	mux := http.NewServeMux()
-	server := webserver.NewWebServer(":8181", mux)
+	server := webserver.NewWebserver(":8181", mux)
 
 	server.AddHandler("POST /temperature", web.GetTemp)
 	server.AddHandler("GET /metrics", promhttp.Handler().ServeHTTP)

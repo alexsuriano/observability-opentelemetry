@@ -5,27 +5,27 @@ import (
 	"net/http"
 )
 
-type WebServer struct {
-	WebServerPort string
+type Webserver struct {
+	WebserverPort string
 	Mux           *http.ServeMux
 	Handlers      map[string]http.HandlerFunc
 }
 
-func NewWebServer(port string, mux *http.ServeMux) *WebServer {
-	return &WebServer{
-		WebServerPort: port,
+func NewWebserver(port string, mux *http.ServeMux) *Webserver {
+	return &Webserver{
+		WebserverPort: port,
 		Mux:           mux,
 		Handlers:      make(map[string]http.HandlerFunc),
 	}
 }
 
-func (s *WebServer) AddHandler(pattern string, handler http.HandlerFunc) {
+func (s *Webserver) AddHandler(pattern string, handler http.HandlerFunc) {
 	s.Mux.HandleFunc(pattern, handler)
 }
 
-func (s *WebServer) Start() {
+func (s *Webserver) Start() {
 	server := http.Server{
-		Addr:    s.WebServerPort,
+		Addr:    s.WebserverPort,
 		Handler: s.Mux,
 	}
 
